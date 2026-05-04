@@ -57,12 +57,16 @@ scatter = None
 for ax, year in zip(axes, years_to_plot):
     scatter = draw_world_map(year, ax)
 
-# Shared colorbar
-cbar = fig.colorbar(scatter, ax=axes, shrink=0.85)
+# Leave room on the right for the shared colorbar
+fig.subplots_adjust(right=0.88, top=0.90, wspace=0.12, hspace=0.20)
+
+# Create a dedicated axis for the colorbar
+cbar_ax = fig.add_axes([0.90, 0.15, 0.02, 0.70])  # [left, bottom, width, height]
+cbar = fig.colorbar(scatter, cax=cbar_ax)
 cbar.set_label("Temperature anomaly (°C)")
 
 fig.suptitle("Global Temperature Anomaly Maps for Key Years", fontsize=20)
-plt.tight_layout()
+
 plt.savefig("static_images/world_maps_key_years.png", dpi=300, bbox_inches="tight")
 plt.show()
 
