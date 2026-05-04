@@ -1,0 +1,326 @@
+year,anomaly_C,region
+1950,-0.91,Arctic
+1951,0.088,Arctic
+1952,-0.128,Arctic
+1953,-0.051,Arctic
+1954,-1.157,Arctic
+1955,0.452,Arctic
+1956,-0.549,Arctic
+1957,-0.33,Arctic
+1958,-0.207,Arctic
+1959,0.533,Arctic
+1960,-0.003,Arctic
+1961,0.385,Arctic
+1962,0.661,Arctic
+1963,-0.516,Arctic
+1964,0.441,Arctic
+1965,0.662,Arctic
+1966,-0.546,Arctic
+1967,-0.767,Arctic
+1968,-0.183,Arctic
+1969,-1.473,Arctic
+1970,0.008,Arctic
+1971,0.348,Arctic
+1972,0.054,Arctic
+1973,-0.53,Arctic
+1974,0.543,Arctic
+1975,0.292,Arctic
+1976,0.226,Arctic
+1977,0.782,Arctic
+1978,0.36,Arctic
+1979,-0.015,Arctic
+1980,0.622,Arctic
+1981,0.431,Arctic
+1982,0.441,Arctic
+1983,-0.294,Arctic
+1984,1.123,Arctic
+1985,0.766,Arctic
+1986,0.954,Arctic
+1987,0.795,Arctic
+1988,1.084,Arctic
+1989,0.848,Arctic
+1990,0.754,Arctic
+1991,0.271,Arctic
+1992,-0.193,Arctic
+1993,0.989,Arctic
+1994,-0.156,Arctic
+1995,1.171,Arctic
+1996,0.796,Arctic
+1997,0.954,Arctic
+1998,1.205,Arctic
+1999,0.657,Arctic
+2000,0.881,Arctic
+2001,0.776,Arctic
+2002,2.396,Arctic
+2003,2.654,Arctic
+2004,2.832,Arctic
+2005,2.081,Arctic
+2006,2.093,Arctic
+2007,1.996,Arctic
+2008,2.164,Arctic
+2009,2.638,Arctic
+2010,2.213,Arctic
+2011,2.039,Arctic
+2012,2.07,Arctic
+2013,2.681,Arctic
+2014,2.117,Arctic
+1950,-0.048,Northern Mid-Latitudes
+1951,0.591,Northern Mid-Latitudes
+1952,0.296,Northern Mid-Latitudes
+1953,-0.012,Northern Mid-Latitudes
+1954,0.065,Northern Mid-Latitudes
+1955,0.436,Northern Mid-Latitudes
+1956,-0.027,Northern Mid-Latitudes
+1957,-0.174,Northern Mid-Latitudes
+1958,0.116,Northern Mid-Latitudes
+1959,0.045,Northern Mid-Latitudes
+1960,-0.118,Northern Mid-Latitudes
+1961,-0.564,Northern Mid-Latitudes
+1962,-0.155,Northern Mid-Latitudes
+1963,-0.034,Northern Mid-Latitudes
+1964,-0.063,Northern Mid-Latitudes
+1965,-0.157,Northern Mid-Latitudes
+1966,0.088,Northern Mid-Latitudes
+1967,-0.309,Northern Mid-Latitudes
+1968,-0.175,Northern Mid-Latitudes
+1969,0.092,Northern Mid-Latitudes
+1970,0.176,Northern Mid-Latitudes
+1971,0.327,Northern Mid-Latitudes
+1972,-0.034,Northern Mid-Latitudes
+1973,-0.051,Northern Mid-Latitudes
+1974,-0.211,Northern Mid-Latitudes
+1975,-0.005,Northern Mid-Latitudes
+1976,-0.237,Northern Mid-Latitudes
+1977,-0.203,Northern Mid-Latitudes
+1978,-0.007,Northern Mid-Latitudes
+1979,0.039,Northern Mid-Latitudes
+1980,0.265,Northern Mid-Latitudes
+1981,0.333,Northern Mid-Latitudes
+1982,-0.127,Northern Mid-Latitudes
+1983,-0.2,Northern Mid-Latitudes
+1984,0.53,Northern Mid-Latitudes
+1985,0.289,Northern Mid-Latitudes
+1986,0.27,Northern Mid-Latitudes
+1987,0.349,Northern Mid-Latitudes
+1988,0.56,Northern Mid-Latitudes
+1989,0.593,Northern Mid-Latitudes
+1990,0.477,Northern Mid-Latitudes
+1991,0.353,Northern Mid-Latitudes
+1992,0.014,Northern Mid-Latitudes
+1993,0.237,Northern Mid-Latitudes
+1994,0.366,Northern Mid-Latitudes
+1995,0.228,Northern Mid-Latitudes
+1996,0.348,Northern Mid-Latitudes
+1997,0.764,Northern Mid-Latitudes
+1998,0.796,Northern Mid-Latitudes
+1999,0.865,Northern Mid-Latitudes
+2000,0.821,Northern Mid-Latitudes
+2001,1.047,Northern Mid-Latitudes
+2002,1.003,Northern Mid-Latitudes
+2003,1.058,Northern Mid-Latitudes
+2004,1.154,Northern Mid-Latitudes
+2005,1.326,Northern Mid-Latitudes
+2006,1.187,Northern Mid-Latitudes
+2007,1.397,Northern Mid-Latitudes
+2008,1.332,Northern Mid-Latitudes
+2009,0.907,Northern Mid-Latitudes
+2010,1.201,Northern Mid-Latitudes
+2011,1.615,Northern Mid-Latitudes
+2012,1.408,Northern Mid-Latitudes
+2013,1.371,Northern Mid-Latitudes
+2014,1.608,Northern Mid-Latitudes
+1950,-0.089,Tropics
+1951,-0.251,Tropics
+1952,0.107,Tropics
+1953,0.265,Tropics
+1954,-0.129,Tropics
+1955,0.06,Tropics
+1956,0.167,Tropics
+1957,-0.064,Tropics
+1958,0.084,Tropics
+1959,0.388,Tropics
+1960,-0.034,Tropics
+1961,0.018,Tropics
+1962,-0.002,Tropics
+1963,-0.095,Tropics
+1964,0.04,Tropics
+1965,-0.103,Tropics
+1966,-0.285,Tropics
+1967,-0.051,Tropics
+1968,-0.232,Tropics
+1969,-0.345,Tropics
+1970,-0.028,Tropics
+1971,0.293,Tropics
+1972,0.063,Tropics
+1973,-0.192,Tropics
+1974,-0.037,Tropics
+1975,-0.201,Tropics
+1976,0.12,Tropics
+1977,0.257,Tropics
+1978,-0.01,Tropics
+1979,0.243,Tropics
+1980,-0.047,Tropics
+1981,0.058,Tropics
+1982,0.215,Tropics
+1983,0.257,Tropics
+1984,0.015,Tropics
+1985,0.084,Tropics
+1986,0.111,Tropics
+1987,0.396,Tropics
+1988,0.324,Tropics
+1989,0.184,Tropics
+1990,0.348,Tropics
+1991,0.529,Tropics
+1992,0.014,Tropics
+1993,0.369,Tropics
+1994,0.226,Tropics
+1995,-0.071,Tropics
+1996,0.211,Tropics
+1997,0.454,Tropics
+1998,0.205,Tropics
+1999,0.085,Tropics
+2000,0.321,Tropics
+2001,0.669,Tropics
+2002,0.643,Tropics
+2003,0.498,Tropics
+2004,0.453,Tropics
+2005,0.316,Tropics
+2006,0.656,Tropics
+2007,0.836,Tropics
+2008,0.284,Tropics
+2009,0.474,Tropics
+2010,0.615,Tropics
+2011,0.646,Tropics
+2012,1.059,Tropics
+2013,0.9,Tropics
+2014,0.39,Tropics
+1950,0.01,Southern Mid-Latitudes
+1951,0.054,Southern Mid-Latitudes
+1952,0.038,Southern Mid-Latitudes
+1953,-0.053,Southern Mid-Latitudes
+1954,0.008,Southern Mid-Latitudes
+1955,-0.006,Southern Mid-Latitudes
+1956,-0.1,Southern Mid-Latitudes
+1957,-0.077,Southern Mid-Latitudes
+1958,0.095,Southern Mid-Latitudes
+1959,0.052,Southern Mid-Latitudes
+1960,-0.085,Southern Mid-Latitudes
+1961,-0.008,Southern Mid-Latitudes
+1962,-0.085,Southern Mid-Latitudes
+1963,-0.019,Southern Mid-Latitudes
+1964,-0.169,Southern Mid-Latitudes
+1965,-0.095,Southern Mid-Latitudes
+1966,-0.193,Southern Mid-Latitudes
+1967,-0.135,Southern Mid-Latitudes
+1968,-0.236,Southern Mid-Latitudes
+1969,-0.004,Southern Mid-Latitudes
+1970,-0.062,Southern Mid-Latitudes
+1971,0.065,Southern Mid-Latitudes
+1972,0.058,Southern Mid-Latitudes
+1973,0.108,Southern Mid-Latitudes
+1974,0.105,Southern Mid-Latitudes
+1975,0.162,Southern Mid-Latitudes
+1976,0.165,Southern Mid-Latitudes
+1977,0.115,Southern Mid-Latitudes
+1978,0.087,Southern Mid-Latitudes
+1979,0.088,Southern Mid-Latitudes
+1980,0.125,Southern Mid-Latitudes
+1981,0.144,Southern Mid-Latitudes
+1982,0.136,Southern Mid-Latitudes
+1983,0.233,Southern Mid-Latitudes
+1984,0.125,Southern Mid-Latitudes
+1985,0.06,Southern Mid-Latitudes
+1986,0.17,Southern Mid-Latitudes
+1987,0.221,Southern Mid-Latitudes
+1988,0.201,Southern Mid-Latitudes
+1989,0.309,Southern Mid-Latitudes
+1990,0.317,Southern Mid-Latitudes
+1991,0.383,Southern Mid-Latitudes
+1992,0.279,Southern Mid-Latitudes
+1993,0.289,Southern Mid-Latitudes
+1994,0.3,Southern Mid-Latitudes
+1995,0.373,Southern Mid-Latitudes
+1996,0.408,Southern Mid-Latitudes
+1997,0.424,Southern Mid-Latitudes
+1998,0.409,Southern Mid-Latitudes
+1999,0.443,Southern Mid-Latitudes
+2000,0.539,Southern Mid-Latitudes
+2001,0.432,Southern Mid-Latitudes
+2002,0.504,Southern Mid-Latitudes
+2003,0.476,Southern Mid-Latitudes
+2004,0.538,Southern Mid-Latitudes
+2005,0.579,Southern Mid-Latitudes
+2006,0.606,Southern Mid-Latitudes
+2007,0.528,Southern Mid-Latitudes
+2008,0.575,Southern Mid-Latitudes
+2009,0.589,Southern Mid-Latitudes
+2010,0.466,Southern Mid-Latitudes
+2011,0.49,Southern Mid-Latitudes
+2012,0.563,Southern Mid-Latitudes
+2013,0.605,Southern Mid-Latitudes
+2014,0.615,Southern Mid-Latitudes
+1950,-0.025,Antarctic
+1951,-0.174,Antarctic
+1952,0.121,Antarctic
+1953,0.226,Antarctic
+1954,-0.802,Antarctic
+1955,-0.14,Antarctic
+1956,-0.434,Antarctic
+1957,-0.982,Antarctic
+1958,0.411,Antarctic
+1959,0.437,Antarctic
+1960,-0.25,Antarctic
+1961,-0.179,Antarctic
+1962,-0.499,Antarctic
+1963,-0.433,Antarctic
+1964,0.368,Antarctic
+1965,-0.147,Antarctic
+1966,-0.873,Antarctic
+1967,-0.07,Antarctic
+1968,-0.363,Antarctic
+1969,0.483,Antarctic
+1970,-0.196,Antarctic
+1971,0.869,Antarctic
+1972,0.498,Antarctic
+1973,0.115,Antarctic
+1974,0.504,Antarctic
+1975,0.285,Antarctic
+1976,0.801,Antarctic
+1977,0.259,Antarctic
+1978,-0.795,Antarctic
+1979,0.576,Antarctic
+1980,0.382,Antarctic
+1981,0.057,Antarctic
+1982,0.735,Antarctic
+1983,0.181,Antarctic
+1984,0.136,Antarctic
+1985,0.515,Antarctic
+1986,0.339,Antarctic
+1987,0.526,Antarctic
+1988,0.292,Antarctic
+1989,0.261,Antarctic
+1990,0.364,Antarctic
+1991,1.367,Antarctic
+1992,0.41,Antarctic
+1993,0.82,Antarctic
+1994,0.365,Antarctic
+1995,0.111,Antarctic
+1996,0.448,Antarctic
+1997,0.546,Antarctic
+1998,0.906,Antarctic
+1999,1.205,Antarctic
+2000,1.585,Antarctic
+2001,0.965,Antarctic
+2002,1.047,Antarctic
+2003,0.622,Antarctic
+2004,0.49,Antarctic
+2005,1.465,Antarctic
+2006,1.495,Antarctic
+2007,1.378,Antarctic
+2008,1.628,Antarctic
+2009,1.05,Antarctic
+2010,0.491,Antarctic
+2011,0.865,Antarctic
+2012,1.532,Antarctic
+2013,0.629,Antarctic
+2014,1.093,Antarctic
