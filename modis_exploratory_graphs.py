@@ -212,39 +212,12 @@ def graph3_regional_trends():
     region_df.to_csv("data/modis_regional_trends.csv", index=False)
 
 
-# ==========================================================
-# Graph 4: Hottest Land Areas by Year
-# ==========================================================
-
-def graph4_hottest_locations():
-    latest_year = df["year"].max()
-    latest_df = df[df["year"] == latest_year].copy()
-
-    hottest = latest_df.sort_values("lst_C", ascending=False).head(15)
-    hottest["location"] = hottest.apply(
-        lambda row: f"lat {row['lat']:.1f}, lon {row['lon']:.1f}",
-        axis=1
-    )
-
-    plt.figure(figsize=(10, 7))
-    plt.barh(hottest["location"], hottest["lst_C"])
-    plt.gca().invert_yaxis()
-
-    plt.title(f"Where Are the Hottest July Land Surfaces? ({latest_year})")
-    plt.xlabel("Land surface temperature (°C)")
-    plt.ylabel("Location")
-    plt.tight_layout()
-    plt.savefig("exploratory_images/graph4_hottest_locations.png", dpi=300)
-    plt.show()
-
-    hottest.to_csv("data/modis_hottest_locations.csv", index=False)
-
 
 # ==========================================================
-# Graph 5: Temperature Distribution Comparison
+# Graph 4: Temperature Distribution Comparison
 # ==========================================================
 
-def graph5_distribution_comparison():
+def graph4_distribution_comparison():
     start_year = df["year"].min()
     end_year = df["year"].max()
 
@@ -275,15 +248,15 @@ def graph5_distribution_comparison():
     plt.legend()
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig("exploratory_images/graph5_temperature_distribution.png", dpi=300)
+    plt.savefig("exploratory_images/graph4_temperature_distribution.png", dpi=300)
     plt.show()
 
 
 # ==========================================================
-# Graph 6: Hotspot Change Map
+# Graph 5: Hotspot Change Map
 # ==========================================================
 
-def graph6_hotspot_change_map():
+def graph5_hotspot_change_map():
     start_year = df["year"].min()
     end_year = df["year"].max()
 
@@ -330,7 +303,7 @@ def graph6_hotspot_change_map():
     plt.xlim(-180, 180)
     plt.ylim(-90, 90)
     plt.tight_layout()
-    plt.savefig("exploratory_images/graph6_hotspot_change_map.png", dpi=300)
+    plt.savefig("exploratory_images/graph5_hotspot_change_map.png", dpi=300)
     plt.show()
 
     hotspots.to_csv("data/modis_hotspots.csv", index=False)
@@ -343,8 +316,7 @@ def graph6_hotspot_change_map():
 graph1_key_year_maps()
 graph2_difference_map()
 graph3_regional_trends()
-graph4_hottest_locations()
-graph5_distribution_comparison()
-graph6_hotspot_change_map()
+graph4_distribution_comparison()
+graph5_hotspot_change_map()
 
 print("Done. Saved graphs in exploratory_images/")
