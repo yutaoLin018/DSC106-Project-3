@@ -11,13 +11,8 @@ os.makedirs("data", exist_ok=True)
 
 DATASET = "MOD_LSTD_M"
 
-DATES = [
-    "2012-07",
-    "2015-07",
-    "2018-07",
-    "2020-07",
-    "2023-07",
-]
+# July of every year from 2012 through 2023
+DATES = [f"{year}-07" for year in range(2012, 2024)]
 
 def download_neo_csv_gz(date):
     url = f"https://neo.gsfc.nasa.gov/archive/csv/{DATASET}/{DATASET}_{date}.CSV.gz"
@@ -32,23 +27,16 @@ def download_neo_csv_gz(date):
     return csv_text
 
 def parse_neo_grid(csv_text):
-    """
-    NASA NEO CSV here is a raw raster grid.
-    It does NOT include longitude/latitude headers.
-    99999.0 means missing data.
-    """
-
     df = pd.read_csv(StringIO(csv_text), header=None)
     values = df.values.astype(float)
 
-    # Replace missing values
+    # 99999 is missing data
     values = np.where(values >= 99999, np.nan, values)
     values = np.where(values <= -9999, np.nan, values)
 
     nlat, nlon = values.shape
 
-    # Generate latitude/longitude cell centers
-    # First row is north, last row is south
+    # Generate latitude and longitude cell centers
     lats = np.linspace(90 - 90 / nlat, -90 + 90 / nlat, nlat)
     lons = np.linspace(-180 + 180 / nlon, 180 - 180 / nlon, nlon)
 
@@ -79,8 +67,6 @@ def save_flat_csv(date, lons, lats, values):
     flat.to_csv(out_path, index=False)
 
     print("Saved:", out_path)
-    print(flat.head())
-
     return flat
 
 def plot_lst_map(date, values):
@@ -107,7 +93,7 @@ def plot_lst_map(date, values):
 
     out_path = f"modis_lst_images/modis_lst_{date}.png"
     plt.savefig(out_path, dpi=300, bbox_inches="tight")
-    plt.show()
+    plt.close()
 
     print("Saved:", out_path)
 
@@ -115,7 +101,6 @@ all_rows = []
 
 for date in DATES:
     csv_text = download_neo_csv_gz(date)
-
     lons, lats, values = parse_neo_grid(csv_text)
 
     flat = save_flat_csv(date, lons, lats, values)
@@ -124,8 +109,9 @@ for date in DATES:
     plot_lst_map(date, values)
 
 combined = pd.concat(all_rows, ignore_index=True)
-combined.to_csv("data/modis_lst_all_years.csv", index=False)
+combined.to_csv("data/modis_lst_july_2012_2023_full.csv", index=False)
 
-print("\nSaved combined D3 data: data/modis_lst_all_years.csv")
+print("\nSaved full data:")
+print("data/modis_lst_july_2012_2023_full.csv")
 print(combined.head())
-print("Done.")
+print(combined.shape)

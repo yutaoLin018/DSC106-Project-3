@@ -1,6 +1,16 @@
+# Ignore large MODIS raw/full data files
 data/modis_lst_all_years.csv
-data/modis_lst_2012-07.csv
-data/modis_lst_2015-07.csv
-data/modis_lst_2018-07.csv
-data/modis_lst_2020-07.csv
-data/modis_lst_2023-07.csv
+data/modis_lst_all_years_small.csv
+data/modis_lst_july_2012_2023_full.csv
+data/modis_lst_20*.csv
+
+# Ignore generated large image folders only
+modis_lst_images/
+modis_images/
+
+# Keep the web-ready CSV
+!data/modis_lst_july_2012_2023_small.csv
+
+# Keep exploratory images because they are small
+!exploratory_images/
+!exploratory_images/*
