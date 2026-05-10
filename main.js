@@ -168,7 +168,7 @@ const regionViewBoxes = {
 
 Promise.all([
   d3.csv(DATA_PATH, d3.autoType),
-  d3.json("https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson")
+  d3.json("data/world.geojson")
 ]).then(([modis, world]) => {
   rawData = modis.filter(d =>
     Number.isFinite(d.lat) &&
