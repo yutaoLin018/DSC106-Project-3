@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>A Decade of Land Surface Warming</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- D3 only -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+    <main>
+        <section class="hero">
+            <h1>A Decade of Land Surface Warming</h1>
+            <p class="subtitle">
+                How did July land surface temperature change across the world from 2012 to 2023?
+            </p>
+            <p class="description">
+                This visualization uses NASA MODIS observed satellite data to explore July land surface temperature.
+                It focuses on land surface temperature, not air temperature, and compares July observations across years.
+            </p>
+        </section>
+
+        <section class="controls">
+            <div class="control-group year-control">
+                <label for="year-slider">Year</label>
+                <input id="year-slider" type="range" min="2012" max="2023" value="2023" step="1" />
+                <div class="year-row">
+                    <span id="year-label">2023</span>
+                    <button id="play-button" type="button" aria-label="Start animation" title="Start animation">
+                    ▶
+                    </button>
+                </div>
+            </div>
+
+        <div class="control-group">
+            <label for="mode-select">Map mode</label>
+            <select id="mode-select">
+            <option value="absolute">Absolute temperature</option>
+            <option value="change" selected>Change from 2012</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="region-select">Highlight region</label>
+            <select id="region-select">
+            <option value="All">All regions</option>
+            <option value="Africa">Africa</option>
+            <option value="Arctic Land">Arctic Land</option>
+            <option value="Australia">Australia / Oceania</option>
+            <option value="Central America & Caribbean">Central America & Caribbean</option>
+            <option value="East Asia">East Asia</option>
+            <option value="Europe">Europe</option>
+            <option value="North America">North America</option>
+            <option value="North Asia">North Asia</option>
+            <option value="South America">South America</option>
+            <option value="South Asia">South Asia</option>
+            </select>
+        </div>
+
+        <button id="reset-zoom" type="button">Reset zoom</button>
+        </section>
+
+        <section class="viz-card">
+        <div class="section-heading">
+            <h2 id="map-title">Change in July Land Surface Temperature Since 2012, 2023</h2>
+            <p id="map-caption">
+            Colors are binned: red areas are warmer than they were in 2012, while blue areas are cooler.
+            </p>
+        </div>
+
+        <div id="map-wrap">
+            <canvas id="map-canvas"></canvas>
+            <svg id="map-overlay"></svg>
+        </div>
+
+        <div id="legend"></div>
+        </section>
+
+        <section class="viz-card">
+        <div class="section-heading">
+            <h2>Compare Selected Year to 2012</h2>
+            <p>
+            This side-by-side view shows the baseline year, the selected year, and the temperature change.
+            The change panel makes it easier to see where land surfaces warmed or cooled.
+            </p>
+        </div>
+
+        <div id="small-multiples"></div>
+        </section>
+
+        <section class="viz-card">
+        <div class="section-heading">
+            <h2>Regional July Land Surface Temperature Trends</h2>
+            <p>
+            Regional averages are calculated using country boundaries where possible.
+            Russia is split into Europe, North Asia, and Arctic Land using latitude and longitude rules,
+            since it spans multiple climate regions.
+            </p>
+        </div>
+
+        <div id="line-chart"></div>
+        </section>
+
+        <section class="takeaway">
+        <h2>Key takeaway</h2>
+        <p id="takeaway-text">
+            The change view highlights where July land surface temperatures shifted most compared with 2012,
+            instead of only showing already-hot regions.
+        </p>
+        </section>
+    </main>
+
+    <div id="tooltip"></div>
+
+    <script src="main.js"></script>
+</body>
+</html>
