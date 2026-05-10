@@ -137,7 +137,6 @@ button:hover {
   width: 100%;
   aspect-ratio: 2 / 1;
   background: #e9eef2;
-  border: 1px solid #ddd;
   border-radius: 14px;
   overflow: hidden;
 }
@@ -158,13 +157,13 @@ button:hover {
 .country {
   fill: none;
   stroke: rgba(80, 80, 80, 0.22);
-  stroke-width: 0.4px;
+  stroke-width: 0.5px;
 }
 
 .region-box {
   fill: rgba(255, 255, 255, 0.06);
-  stroke: #000;
-  stroke-width: 1.2px;
+  stroke: #222;
+  stroke-width: 1.5px;
   stroke-dasharray: 5 4;
   pointer-events: none;
 }
@@ -247,16 +246,13 @@ button:hover {
 
 #tooltip {
   position: absolute;
-  opacity: 0;
-  pointer-events: none;
   background: white;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 0.55rem 0.7rem;
-  font-size: 0.85rem;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.18);
-  max-width: 300px;
-  z-index: 10;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 100;
 }
 
 .takeaway {

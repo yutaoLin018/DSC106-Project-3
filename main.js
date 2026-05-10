@@ -370,12 +370,9 @@ function setupMap(world) {
 }
 
 function resizeMap() {
-  const rect = mapWrap.getBoundingClientRect();
-  width = Math.max(600, Math.floor(rect.width));
-  height = Math.floor(width / 2);
-
-  canvas.width = width;
-  canvas.height = height;
+    const rect = mapWrap.getBoundingClientRect();
+    width = rect.width; height = width / 2;
+    canvas.width = width; canvas.height = height;
 }
 
 function zoomToRegion(region) {
@@ -464,50 +461,60 @@ function drawMap() {
 }
 
 function drawRegionBox() {
-  const layer = overlay.select(".region-layer");
-  layer.selectAll("*").remove();
+    const layer = overlay.select(".region-layer");
+    layer.selectAll("*").remove();
+    if (currentRegion === "All") return;
 
-  if (currentRegion === "All") return;
+    if (currentRegion === "North Asia" || currentRegion === "Arctic Land" || currentRegion === "Europe") {
+        const boundsConfig = {
+            "North Asia": { latMin: 40, latMax: 66.5, lonMin: 40, lonMax: 180 },
+            "Arctic Land": { latMin: 66.5, latMax: 90, lonMin: -180, lonMax: 180 },
+            "Europe": { latMin: 35, latMax: 66.5, lonMin: -10, lonMax: 40 }
+        };
 
-  if (currentRegion === "North Asia") {
-    const r = {
-      latMin: 40,
-      latMax: 66.5,
-      lonMin: 40,
-      lonMax: 180
-    };
+        const config = boundsConfig[currentRegion];
+        const russia = worldFeatures.find(f => getCountryName(f).includes("Russia"));
 
-    const feature = {
-      type: "Feature",
-      geometry: {
-        type: "Polygon",
-        coordinates: [[
-          [r.lonMin, r.latMin],
-          [r.lonMax, r.latMin],
-          [r.lonMax, r.latMax],
-          [r.lonMin, r.latMax],
-          [r.lonMin, r.latMin]
-        ]]
-      }
-    };
+        if (russia && config) {
+            const clipRect = {
+                type: "Feature",
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [[
+                        [config.lonMin, config.latMin], [config.lonMax, config.latMin],
+                        [config.lonMax, config.latMax], [config.lonMin, config.latMax],
+                        [config.lonMin, config.latMin]
+                    ]]
+                }
+            };
 
-    layer.append("path")
-      .datum(feature)
-      .attr("class", "region-box")
-      .attr("d", path);
+            const defs = layer.append("defs");
+            defs.append("clipPath")
+                .attr("id", "region-clip")
+                .append("path")
+                .datum(clipRect)
+                .attr("d", path);
 
-    return;
-  }
+            layer.append("path")
+                .datum(russia)
+                .attr("class", "region-box")
+                .attr("d", path)
+                .attr("clip-path", "url(#region-clip)");
+            
+            if(currentRegion === "Europe") {
+                const others = featureRegionLookup.filter(d => d.region === "Europe" && !d.countryName.includes("Russia"));
+                layer.selectAll(".other-europe")
+                    .data(others.map(d => d.feature))
+                    .join("path")
+                    .attr("class", "region-box")
+                    .attr("d", path);
+            }
+            return;
+        }
+    }
 
-  const selectedFeatures = featureRegionLookup
-    .filter(d => d.region === currentRegion)
-    .map(d => d.feature);
-
-  layer.selectAll("path")
-    .data(selectedFeatures)
-    .join("path")
-    .attr("class", "region-box")
-    .attr("d", path);
+    const features = featureRegionLookup.filter(d => d.region === currentRegion).map(d => d.feature);
+    layer.selectAll("path").data(features).join("path").attr("class", "region-box").attr("d", path);
 }
 
 // ======================================================
