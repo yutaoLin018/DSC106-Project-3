@@ -27,11 +27,16 @@
 
         <section class="controls">
             <div class="control-group year-control">
-                <label for="year-slider">Year</label>
-                <input id="year-slider" type="range" min="2012" max="2023" value="2023" step="1" />
+                <label for="year-a-slider">Year A <span class="year-badge year-badge-a">baseline</span></label>
+                <input id="year-a-slider" type="range" min="2012" max="2023" value="2012" step="1" />
+                <span id="year-a-label" class="year-label-display">2012</span>
+            </div>
+            <div class="control-group year-control">
+                <label for="year-b-slider">Year B <span class="year-badge year-badge-b">comparison</span></label>
+                <input id="year-b-slider" type="range" min="2012" max="2023" value="2023" step="1" />
                 <div class="year-row">
-                    <span id="year-label">2023</span>
-                    <button id="play-button" type="button" aria-label="Start animation" title="Start animation">
+                    <span id="year-b-label" class="year-label-display">2023</span>
+                    <button id="play-button" type="button" aria-label="Start animation" title="Advance Year B">
                     ▶
                     </button>
                 </div>
@@ -67,7 +72,7 @@
 
         <section class="viz-card">
         <div class="section-heading">
-            <h2 id="map-title">Change in July Land Surface Temperature Since 2012, 2023</h2>
+            <h2 id="map-title">Change in July Land Surface Temperature: 2012 → 2023</h2>
             <p id="map-caption">
             Colors are binned: red areas are warmer than they were in 2012, while blue areas are cooler.
             </p>
@@ -83,10 +88,10 @@
 
         <section class="viz-card">
         <div class="section-heading">
-            <h2>Compare Selected Year to 2012</h2>
+            <h2>Compare Year A and Year B</h2>
             <p>
-            This side-by-side view shows the baseline year, the selected year, and the temperature change.
-            The change panel makes it easier to see where land surfaces warmed or cooled.
+            This side-by-side view shows Year A (baseline), Year B (comparison), and the temperature change between them.
+            Adjust both sliders above to compare any two years directly.
             </p>
         </div>
 

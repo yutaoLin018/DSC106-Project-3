@@ -42,7 +42,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  align-items: end;
+  align-items: start;
   justify-content: center;
   background: white;
   padding: 1rem;
@@ -58,7 +58,33 @@ h1 {
 }
 
 .year-control {
-  min-width: 240px;
+  min-width: 200px;
+}
+
+.year-label-display {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.year-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 6px;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.year-badge-a {
+  background: #d0e9ff;
+  color: #1a5fa8;
+}
+
+.year-badge-b {
+  background: #fde3d0;
+  color: #b23a0a;
 }
 
 .year-row {

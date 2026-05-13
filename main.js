@@ -9,7 +9,8 @@ let dataByYear = new Map();
 let baselineByLocation = new Map();
 let regionalData = [];
 
-let currentYear = 2023;
+let yearA = 2012;
+let yearB = 2023;
 let currentMode = "change";
 let currentRegion = "All";
 let currentTransform = d3.zoomIdentity;
@@ -20,6 +21,26 @@ let zoomBehavior = null;
 
 let playTimer = null;
 let isPlaying = false;
+
+// Cache for computed change maps so we don't re-derive on every frame.
+const changeCache = new Map();
+
+function getChangeMap(ya, yb) {
+  const key = `${ya}-${yb}`;
+  if (changeCache.has(key)) return changeCache.get(key);
+
+  const baseMap = new Map();
+  (dataByYear.get(ya) || []).forEach(d => baseMap.set(locationKey(d), d.lst_C));
+
+  const out = new Map();
+  (dataByYear.get(yb) || []).forEach(d => {
+    const base = baseMap.get(locationKey(d));
+    out.set(locationKey(d), Number.isFinite(base) ? d.lst_C - base : null);
+  });
+
+  changeCache.set(key, out);
+  return out;
+}
 
 // ======================================================
 // DOM
@@ -415,8 +436,25 @@ function zoomToRegion(region) {
 // Main map drawing
 // ======================================================
 
+// Returns true when a data point should render at full opacity for the current region filter.
+// A point qualifies if it belongs to the selected region OR falls within its geographic view-box
+// (handles Arctic/Russia boundary cases where `assignRegion` hard-cuts at 66.5°N).
+function isInRegion(d) {
+  if (currentRegion === "All") return true;
+  if (d.region === currentRegion) return true;
+
+  const box = regionViewBoxes[currentRegion];
+  if (box) {
+    const [[lonMin, latMin], [lonMax, latMax]] = box;
+    if (d.lon >= lonMin && d.lon <= lonMax && d.lat >= latMin && d.lat <= latMax) return true;
+  }
+
+  return false;
+}
+
 function drawMap() {
-  const yearData = dataByYear.get(currentYear) || [];
+  const yearData = dataByYear.get(yearB) || [];
+  const chMap = currentMode === "change" ? getChangeMap(yearA, yearB) : null;
 
   context.save();
   context.clearRect(0, 0, width, height);
@@ -430,17 +468,24 @@ function drawMap() {
   const radius = currentTransform.k > 3 ? 2.4 : 1.8;
 
   yearData.forEach(d => {
-    if (currentRegion !== "All" && d.region !== currentRegion) {
-      context.globalAlpha = 0.04;
-    } else {
-      context.globalAlpha = 1.0;
-    }
-
-    const value = currentMode === "absolute" ? d.lst_C : d.change_C;
+    const value = currentMode === "absolute" ? d.lst_C : chMap.get(locationKey(d));
     if (!Number.isFinite(value)) return;
 
     const p = projection([d.lon, d.lat]);
     if (!p) return;
+
+    if (isInRegion(d)) {
+      context.globalAlpha = 1.0;
+    } else if (currentTransform.k > 1.1) {
+      // When zoomed in, check if the point is actually on-screen. Points in the
+      // zoom padding strip beyond the region view-box would otherwise be invisible,
+      // creating a hard blank band at every region edge.
+      const sx = p[0] * currentTransform.k + currentTransform.x;
+      const sy = p[1] * currentTransform.k + currentTransform.y;
+      context.globalAlpha = (sx >= 0 && sx <= width && sy >= 0 && sy <= height) ? 1.0 : 0.04;
+    } else {
+      context.globalAlpha = 0.04;
+    }
 
     context.beginPath();
     context.arc(p[0], p[1], radius, 0, 2 * Math.PI);
@@ -531,7 +576,8 @@ function handleMouseMove(event) {
   if (!lonLat) return;
 
   const [lon, lat] = lonLat;
-  const yearData = dataByYear.get(currentYear) || [];
+  const yearData = dataByYear.get(yearB) || [];
+  const chMap = getChangeMap(yearA, yearB);
 
   let nearest = null;
   let bestDist = Infinity;
@@ -552,11 +598,12 @@ function handleMouseMove(event) {
     return;
   }
 
-  const changeText = Number.isFinite(nearest.change_C)
-    ? nearest.change_C >= 0
-      ? `${nearest.change_C.toFixed(1)}°C warmer than 2012 at this location`
-      : `${Math.abs(nearest.change_C).toFixed(1)}°C cooler than 2012 at this location`
-    : "No 2012 comparison available";
+  const changeVal = chMap.get(locationKey(nearest));
+  const changeText = Number.isFinite(changeVal)
+    ? changeVal >= 0
+      ? `${changeVal.toFixed(1)}°C warmer than ${yearA} at this location`
+      : `${Math.abs(changeVal).toFixed(1)}°C cooler than ${yearA} at this location`
+    : `No ${yearA} comparison available`;
 
   tooltip
     .style("opacity", 1)
@@ -596,12 +643,13 @@ function updateLegend() {
   const body = svg.select(".legend-body");
   body.selectAll("*").remove();
 
-  const yearData = dataByYear.get(currentYear) || [];
+  const yearBData = dataByYear.get(yearB) || [];
 
   if (currentMode === "absolute") {
-    drawHistogramLegendAbsolute(body, yearData);
+    drawHistogramLegendAbsolute(body, yearBData);
   } else {
-    drawHistogramLegendChange(body, yearData);
+    const chMap = getChangeMap(yearA, yearB);
+    drawHistogramLegendChange(body, yearBData, chMap);
   }
 }
 
@@ -682,10 +730,10 @@ function drawHistogramLegendAbsolute(body, yearData) {
     .attr("y", 14)
     .attr("font-size", 12)
     .attr("fill", "#555")
-    .text(`Distribution of ${currentYear} July land surface temperatures`);
+    .text(`Distribution of Year B (${yearB}) July land surface temperatures`);
 }
 
-function drawHistogramLegendChange(body, yearData) {
+function drawHistogramLegendChange(body, yearData, chMap) {
   const x0 = 70;
   const y0 = 68;
   const boxW = 76;
@@ -693,7 +741,7 @@ function drawHistogramLegendChange(body, yearData) {
   const histHeight = 42;
 
   const values = yearData
-    .map(d => d.change_C)
+    .map(d => chMap.get(locationKey(d)))
     .filter(Number.isFinite);
 
   const bins = [
@@ -762,7 +810,7 @@ function drawHistogramLegendChange(body, yearData) {
     .attr("y", 14)
     .attr("font-size", 12)
     .attr("fill", "#555")
-    .text(`Distribution of ${currentYear} July temperature changes`);
+    .text(`Distribution of Year B (${yearB}) temperature changes vs Year A (${yearA})`);
 
   body.append("text")
     .attr("x", x0 + boxW * bins.length + 12)
@@ -784,22 +832,12 @@ function drawHistogramLegendChange(body, yearData) {
 // ======================================================
 
 function drawSmallMultiples() {
+  const chMap = getChangeMap(yearA, yearB);
+
   const panels = [
-    {
-      title: "2012 baseline",
-      year: 2012,
-      mode: "absolute"
-    },
-    {
-      title: `${currentYear} selected year`,
-      year: currentYear,
-      mode: "absolute"
-    },
-    {
-      title: `${currentYear} change from 2012`,
-      year: currentYear,
-      mode: "change"
-    }
+    { title: `Year A — ${yearA}`, year: yearA, mode: "absolute" },
+    { title: `Year B — ${yearB}`, year: yearB, mode: "absolute" },
+    { title: `Change: ${yearA} → ${yearB}`, year: yearB, mode: "change" }
   ];
 
   const container = d3.select("#small-multiples").html("");
@@ -831,13 +869,11 @@ function drawSmallMultiples() {
     smallContext.fillRect(0, 0, cardWidth, cardHeight);
 
     yearData.forEach(d => {
-      if (currentRegion !== "All" && d.region !== currentRegion) {
-        smallContext.globalAlpha = 0.06;
-      } else {
-        smallContext.globalAlpha = 0.95;
-      }
+      smallContext.globalAlpha = isInRegion(d) ? 0.95 : 0.06;
 
-      const value = panel.mode === "absolute" ? d.lst_C : d.change_C;
+      const value = panel.mode === "absolute"
+        ? d.lst_C
+        : chMap.get(locationKey(d));
       if (!Number.isFinite(value)) return;
 
       const p = smallProjection([d.lon, d.lat]);
@@ -955,14 +991,45 @@ function drawLineChart() {
       .attr("opacity", currentRegion === "All" || currentRegion === region ? 1 : 0.12);
   });
 
+  // Year A marker (blue tint)
   g.append("line")
-    .attr("x1", x(currentYear))
-    .attr("x2", x(currentYear))
+    .attr("x1", x(yearA))
+    .attr("x2", x(yearA))
     .attr("y1", 0)
     .attr("y2", innerHeight)
-    .attr("stroke", "#222")
+    .attr("stroke", "#1a5fa8")
     .attr("stroke-width", 1.5)
-    .attr("stroke-dasharray", "5 4");
+    .attr("stroke-dasharray", "5 4")
+    .attr("opacity", 0.7);
+
+  g.append("text")
+    .attr("x", x(yearA))
+    .attr("y", -6)
+    .attr("text-anchor", "middle")
+    .attr("font-size", 11)
+    .attr("fill", "#1a5fa8")
+    .attr("font-weight", "700")
+    .text(`A`);
+
+  // Year B marker (orange/red tint)
+  g.append("line")
+    .attr("x1", x(yearB))
+    .attr("x2", x(yearB))
+    .attr("y1", 0)
+    .attr("y2", innerHeight)
+    .attr("stroke", "#b23a0a")
+    .attr("stroke-width", 1.5)
+    .attr("stroke-dasharray", "5 4")
+    .attr("opacity", 0.7);
+
+  g.append("text")
+    .attr("x", x(yearB))
+    .attr("y", -6)
+    .attr("text-anchor", "middle")
+    .attr("font-size", 11)
+    .attr("fill", "#b23a0a")
+    .attr("font-weight", "700")
+    .text(`B`);
 
   const years = d3.range(2012, 2024);
   const hoverWidth = innerWidth / years.length;
@@ -971,16 +1038,21 @@ function drawLineChart() {
     .data(years)
     .join("rect")
     .attr("class", "year-hover")
-    .attr("x", d => x(d) - hoverWidth / 2)
+    .attr("x", d => Math.max(0, x(d) - hoverWidth / 2))
     .attr("y", 0)
-    .attr("width", hoverWidth)
+    .attr("width", (d, i) => i === 0 ? hoverWidth / 2 + x(d) : hoverWidth)
     .attr("height", innerHeight)
     .attr("fill", "transparent")
+    .attr("title", "Click to set Year B")
     .on("mouseenter", (event, year) => {
-      currentYear = year;
+      yearB = year;
+      if (yearB <= yearA) { yearA = Math.max(yearB - 1, 2012); }
+      if (yearA >= yearB) { return; }
 
-      d3.select("#year-slider").property("value", currentYear);
-      d3.select("#year-label").text(currentYear);
+      d3.select("#year-b-slider").property("value", yearB);
+      d3.select("#year-b-label").text(yearB);
+      d3.select("#year-a-slider").property("value", yearA);
+      d3.select("#year-a-label").text(yearA);
 
       drawMap();
       drawSmallMultiples();
@@ -988,10 +1060,14 @@ function drawLineChart() {
       updateText();
     })
     .on("click", (event, year) => {
-      currentYear = year;
+      yearB = year;
+      if (yearB <= yearA) { yearA = Math.max(yearB - 1, 2012); }
+      if (yearA >= yearB) { return; }
 
-      d3.select("#year-slider").property("value", currentYear);
-      d3.select("#year-label").text(currentYear);
+      d3.select("#year-b-slider").property("value", yearB);
+      d3.select("#year-b-label").text(yearB);
+      d3.select("#year-a-slider").property("value", yearA);
+      d3.select("#year-a-label").text(yearA);
 
       drawMap();
       drawSmallMultiples();
@@ -1027,16 +1103,37 @@ function safeClass(s) {
 // ======================================================
 
 function setupControls() {
-    d3.select("#year-slider").on("input", function () {
-        currentYear = +this.value;
-        d3.select("#year-label").text(currentYear);
+  d3.select("#year-a-slider").on("input", function () {
+    yearA = +this.value;
+    if (yearA >= yearB) {
+      yearB = Math.min(yearA + 1, 2023);
+      d3.select("#year-b-slider").property("value", yearB);
+      d3.select("#year-b-label").text(yearB);
+    }
+    d3.select("#year-a-label").text(yearA);
 
-        drawMap();
-        drawSmallMultiples();
-        drawLineChart();
-        updateLegend();
-        updateText();
-    });
+    drawMap();
+    drawSmallMultiples();
+    drawLineChart();
+    updateLegend();
+    updateText();
+  });
+
+  d3.select("#year-b-slider").on("input", function () {
+    yearB = +this.value;
+    if (yearB <= yearA) {
+      yearA = Math.max(yearB - 1, 2012);
+      d3.select("#year-a-slider").property("value", yearA);
+      d3.select("#year-a-label").text(yearA);
+    }
+    d3.select("#year-b-label").text(yearB);
+
+    drawMap();
+    drawSmallMultiples();
+    drawLineChart();
+    updateLegend();
+    updateText();
+  });
 
   d3.select("#mode-select").on("change", function () {
     currentMode = this.value;
@@ -1058,39 +1155,40 @@ function setupControls() {
   });
 
   d3.select("#play-button").on("click", function () {
-  const button = d3.select(this);
+    const button = d3.select(this);
 
-  if (isPlaying) {
-    clearInterval(playTimer);
-    playTimer = null;
-    isPlaying = false;
+    if (isPlaying) {
+      clearInterval(playTimer);
+      playTimer = null;
+      isPlaying = false;
 
-    button.text("▶")
-      .attr("aria-label", "Start animation")
-      .attr("title", "Start animation");
+      button.text("▶")
+        .attr("aria-label", "Start animation")
+        .attr("title", "Advance Year B");
 
-    return;
-  }
+      return;
+    }
 
-  isPlaying = true;
+    isPlaying = true;
 
-  button.text("⏸")
-    .attr("aria-label", "Pause animation")
-    .attr("title", "Pause animation");
+    button.text("⏸")
+      .attr("aria-label", "Pause animation")
+      .attr("title", "Pause animation");
 
-  playTimer = setInterval(() => {
-    currentYear = currentYear >= 2023 ? 2012 : currentYear + 1;
+    playTimer = setInterval(() => {
+      yearB = yearB >= 2023 ? yearA + 1 : yearB + 1;
+      if (yearB > 2023) yearB = yearA + 1;
 
-    d3.select("#year-slider").property("value", currentYear);
-    d3.select("#year-label").text(currentYear);
+      d3.select("#year-b-slider").property("value", yearB);
+      d3.select("#year-b-label").text(yearB);
 
-    drawMap();
-    drawSmallMultiples();
-    drawLineChart();
-    updateLegend();
-    updateText();
-  }, 900);
-});
+      drawMap();
+      drawSmallMultiples();
+      drawLineChart();
+      updateLegend();
+      updateText();
+    }, 900);
+  });
 }
 
 // ======================================================
@@ -1099,14 +1197,14 @@ function setupControls() {
 
 function updateText() {
   const modeText = currentMode === "absolute"
-    ? `July Land Surface Temperature, ${currentYear}`
-    : `Change in July Land Surface Temperature Since 2012, ${currentYear}`;
+    ? `July Land Surface Temperature, Year B (${yearB})`
+    : `Change in July Land Surface Temperature: ${yearA} → ${yearB}`;
 
   d3.select("#map-title").text(modeText);
 
   const caption = currentMode === "absolute"
-    ? "Warmer colors show hotter land surface temperatures. Use the slider, play button, or line chart hover to compare years."
-    : "Colors are binned: red areas are warmer than they were in 2012, while blue areas are cooler.";
+    ? `Showing Year B (${yearB}). Warmer colors are hotter land surfaces. Use the sliders or line chart to pick any two years.`
+    : `Red areas warmed from ${yearA} to ${yearB}; blue areas cooled. Adjust Year A and Year B sliders to compare any two years.`;
 
   d3.select("#map-caption").text(caption);
 
@@ -1114,21 +1212,21 @@ function updateText() {
 
   if (currentRegion === "All") {
     regionText =
-      "The change view highlights where July land surface temperatures shifted most compared with 2012, instead of only showing already-hot regions.";
+      `The change view highlights where July land surface temperatures shifted most between ${yearA} and ${yearB}, instead of only showing already-hot regions.`;
   } else {
     const selected = regionalData.filter(d => d.region === currentRegion);
-    const y2012 = selected.find(d => d.year === 2012);
-    const yNow = selected.find(d => d.year === currentYear);
+    const yA = selected.find(d => d.year === yearA);
+    const yB = selected.find(d => d.year === yearB);
 
-    if (y2012 && yNow) {
-      const diff = yNow.avg - y2012.avg;
+    if (yA && yB) {
+      const diff = yB.avg - yA.avg;
       const direction = diff >= 0 ? "warmer" : "cooler";
 
       regionText =
-        `${currentRegion} is about ${Math.abs(diff).toFixed(1)}°C ${direction} in July ${currentYear} compared with July 2012 based on the regional average.`;
+        `${currentRegion} is about ${Math.abs(diff).toFixed(1)}°C ${direction} in July ${yearB} compared with July ${yearA} based on the regional average.`;
     } else {
       regionText =
-        `No regional average is available for ${currentRegion} in ${currentYear}.`;
+        `No regional average is available for ${currentRegion} comparing ${yearA} and ${yearB}.`;
     }
   }
 
