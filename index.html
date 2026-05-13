@@ -111,11 +111,41 @@
         <div id="line-chart"></div>
         </section>
 
-        <section class="takeaway">
-        <h2>Key takeaway</h2>
-        <p id="takeaway-text">
-            The change view highlights where July land surface temperatures shifted most compared with 2012,
-            instead of only showing already-hot regions.
+        <section class="writeup">
+        <h2>Write-up</h2>
+
+        <p>
+            Our final visualization seeks to explore how land surface temperature has changed across the world
+            from 2012 to every following year until 2023. We wanted to see which continents and regions have
+            warmed up or cooled down significantly. The visualization uses a world map overview with sliders to
+            compare a 2012 baseline year to a selected comparison year through 2023. Users can also zoom in on
+            certain regions to get a closer look, and the tooltip shows the region, exact location, temperature,
+            and temperature change at that location. The selected region has a dotted boundary around it to make
+            the highlighted area clear. The map uses darker blue pixels for cooling temperatures and darker red
+            pixels for warming temperatures. In addition to the change view, the map also includes an absolute
+            temperature option so users can see the land surface temperature for a selected year only. Below the
+            main map, we added a side-by-side comparison of the baseline year, selected year, and temperature
+            change, as well as a line graph showing average land surface temperature trends by region over time.
+        </p>
+
+        <p>
+            We chose a world map as our primary visualization because our question is mainly geographic. Bar
+            charts and line charts were considered, but they require aggregating data by region, which would lose
+            many location-specific patterns. A diverging red-blue color scale was used because it connects
+            intuitively to temperature change, with red representing warming and blue representing cooling. The
+            year sliders give users direct control over time instead of forcing them to watch a fixed animation.
+            Tooltips provide exact values without cluttering the map, and the dotted region boundary keeps the
+            selected region visually clear. The side-by-side panel and line graph were added to support different
+            levels of analysis, from a global overview to more specific regional trends.
+        </p>
+
+        <p>
+            We split ourselves into different roles for the project. One area focused on preprocessing the data
+            because the MODIS files were large and needed to be transformed into a format that could load smoothly
+            on the webpage. Another area focused on the interactive map, including zooming, color coding, map mode,
+            and year controls. The final area focused on the supplementary charts, tooltips, layout, styling, and
+            written explanation. This helped us combine data processing, interaction design, and visual storytelling
+            into one final visualization.
         </p>
         </section>
     </main>
