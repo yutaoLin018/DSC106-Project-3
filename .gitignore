@@ -1,3 +1,6 @@
+# Cursor/Claude internal worktrees — never commit
+.claude/
+
 # Ignore large MODIS raw/full data files
 data/modis_lst_all_years.csv
 data/modis_lst_all_years_small.csv
